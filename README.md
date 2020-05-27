@@ -1,11 +1,23 @@
 # gitch
 
-Syncs github release notes with your project's CHANGELOG.md.
+Gitch syncs github release notes up with your project's CHANGELOG.md. _How_ you
+create your changelog is of no interest to gitch.
 
 # Install
 
 ```
-]$ pip install gitch`
+]$ pip install gitch
+```
+
+# Configure
+
+You will first need to [create a github personal access token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line).
+You will need to give your access token `repo` scope.
+
+Then, tell gitch about it like so:
+
+```
+]$ export GITCH_GITHUB_TOKEN=<token>
 ```
 
 # Usage
