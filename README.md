@@ -1,6 +1,6 @@
 # gitch
 
-Gitch syncs github release notes up with your project's CHANGELOG.md. _How_ you
+Gitch syncs github release notes with your project's CHANGELOG.md. _How_ you
 create your changelog is of no interest to gitch.
 
 # Install
@@ -33,12 +33,11 @@ Consider a `CHANGELOG.md` like so:
 
 - did a thing to a thing.
 
+## 2.60.0 (2020-05-12)
+
 **Closed issues:**
 
 - fixed some other thing that was fooing too much.
-
-## 2.60.0 (2020-05-12)
-...
 ```
 
 The `gitch` tool will assume that the _first token in each H2 header_ identifies
@@ -47,6 +46,12 @@ a tag in your github repository (in the example above, these are `2.60.1` and
 actual content within each tag section is copied verbatim into the release notes.
 
 ## Examples
+
+To list the tags present in your changelog:
+
+```
+]$ gitch -l
+```
 
 To sync the latest changelog tag to github release notes:
 
