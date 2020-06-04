@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 wheee
+
+hey
+
 ## 0.3.0 hello
 
 ## 0.2.0
