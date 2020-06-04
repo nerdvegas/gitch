@@ -45,6 +45,10 @@ a tag in your github repository (in the example above, these are `v2.60.1` and
 `v2.60.0`). It will then simply create github releases that match these tags. The
 actual content within each tag section is copied verbatim into the release notes.
 
+Note that releases will not be created unless the matching tag exists at the
+remote (ie on github). This is to avoid typos in your changelog creating spurious
+tags in your repository.
+
 ```
 ]$ gitch --all
 gitch INFO Syncing 'v2.60.1' to github...
