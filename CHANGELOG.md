@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0
+
+did stuff
+
 ## 0.1.0
 
 This is a test?!?
