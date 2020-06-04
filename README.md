@@ -45,6 +45,14 @@ a tag in your github repository (in the example above, these are `2.60.1` and
 `2.60.0`). It will then simply create github releases that match these tags. The
 actual content within each tag section is copied verbatim into the release notes.
 
+```
+]$ gitch --all
+gitch INFO Syncing '2.60.1' to github...
+gitch INFO '2.60.1' synced, see https://github.com/jbloggs/foo/releases/tag/2.60.1
+gitch INFO Syncing '2.60.0' to github...
+gitch INFO '2.60.0' synced, see https://github.com/jbloggs/foo/releases/tag/2.60.0
+```
+
 ## Examples
 
 To list the tags present in your changelog:

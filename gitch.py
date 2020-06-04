@@ -4,6 +4,7 @@ from __future__ import print_function
 import argparse
 import logging
 import os
+import re
 import sys
 import subprocess
 
@@ -20,6 +21,11 @@ class GitchError(Exception):
 
 class SectionNotExistsError(GitchError):
     """A changelog section does not exist."""
+    pass
+
+
+class TagNotExistsError(GitchError):
+    """A tag does not exist at the remote."""
     pass
 
 
@@ -41,6 +47,7 @@ class ChangelogSyncer(object):
             path (str): Path on disk within target git repo.
             overwrite (bool): If True, overwrite existing gh releases.
         """
+        self.path = path or os.getcwd()
         self.token = token
         self.overwrite = overwrite
 
@@ -49,43 +56,46 @@ class ChangelogSyncer(object):
         self.github_repo_name = None
         self.changelog_sections = None
         self.gh_releases = None
-
-        path or os.getcwd()
+        self.branch = None
 
         # find root dir of local git repo checkout
         try:
-            out = subprocess.check_output(
-                ["git", "rev-parse", "--show-toplevel"],
-                stderr=subprocess.PIPE,
-                cwd=path
-            )
+            out = self._git("rev-parse", "--show-toplevel")
             root_path = out.strip()
         except subprocess.CalledProcessError:
             raise GitchError("Not in a git repository")
+
+        # check that there is a remote
+        try:
+            out = self._git("remote", "get-url", "origin")
+            remote_url = out.strip()
+        except subprocess.CalledProcessError:
+            raise GitchError("There is no git remote")
 
         # find changelog
         self.changelog_filepath = os.path.join(root_path, "CHANGELOG.md")
         if not os.path.isfile(self.changelog_filepath):
             raise GitchError("Expected changelog at %s", self.changelog_filepath)
 
-        # Check remote is a github repo, and parse out user and repo name
-        # Expecting output like 'git@github.com:nerdvegas/gitch.git'
+        # get checked out branch
+        try:
+            out = self._git("rev-parse", "--abbrev-ref", "HEAD")
+            branch = out.strip()
+            if branch != "HEAD":  # detached HEAD mode
+                self.branch = branch
+        except:
+            pass
+
+        # Check remote is a github repo, and parse out user and repo name.
+        # Expecting remote_url like 'git@github.com:nerdvegas/gitch.git'
         #
-        out = subprocess.check_output(
-            ["git", "remote", "get-url", "origin"],
-            stderr=subprocess.PIPE,
-            cwd=path
-        )
-
-        # drop leading 'git@' and trailing '.git'
-        txt = out.strip().split('@', 1)[-1]
-        txt = txt.rsplit('.', 1)[0]
-        domain, uri = txt.split(':')
-
-        if domain != "github.com":
+        regex = re.compile("^git@(.*):(.*)/(.*)\\.git$")
+        m = regex.match(remote_url)
+        if not m or m.groups()[0] != "github.com":
             raise GitchError("Not a github repository")
 
-        self.github_user, self.github_repo_name = uri.split('/')
+        self.github_user = m.groups()[1]
+        self.github_repo_name = m.groups()[2]
 
     @property
     def github_url(self):
@@ -121,6 +131,17 @@ class ChangelogSyncer(object):
                 % (tag, self.changelog_filepath)
             )
 
+        # Ensure tag exists at remote. You can create a release for a tag that
+        # doesn't exist, and github will create the tag for you. However it's
+        # too easy to bugger things up by creating a tag unintentionally (due to
+        # a typo in your changelog), and we don't want that.
+        #
+        out = self._git("ls-remote", "origin", "refs/tags/" + tag)
+        if not out.strip():
+            raise TagNotExistsError(
+                "Tag %r does not exist at the remote" % tag
+            )
+
         # determine if release already exists
         existing_release = None
         for release in self._get_gh_releases():
@@ -137,7 +158,8 @@ class ChangelogSyncer(object):
         data = {
             "tag_name": tag,
             "name": section["header"],
-            "body": section["content"]
+            "body": section["content"],
+            "target_commitish": self.branch
         }
 
         if existing_release:
@@ -148,6 +170,13 @@ class ChangelogSyncer(object):
 
         resp.raise_for_status()
         return resp.json()["html_url"]
+
+    def _git(self, *nargs):
+        return subprocess.check_output(
+            ["git"] + nargs,
+            stderr=subprocess.PIPE,
+            cwd=self.path
+        )
 
     def _get_changelog_sections(self):
         """

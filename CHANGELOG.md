@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+getting there
+
 ## 0.6.0
 
 woot

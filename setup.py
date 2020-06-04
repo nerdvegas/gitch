@@ -1,7 +1,7 @@
 from setuptools import setup
 
 
-version = '0.6.0'
+version = '0.7.0'
 description = "Sync github release notes with your project's changelog"
 
 setup(
