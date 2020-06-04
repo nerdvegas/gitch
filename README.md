@@ -51,6 +51,8 @@ gitch INFO Syncing '2.60.1' to github...
 gitch INFO '2.60.1' synced, see https://github.com/jbloggs/foo/releases/tag/2.60.1
 gitch INFO Syncing '2.60.0' to github...
 gitch INFO '2.60.0' synced, see https://github.com/jbloggs/foo/releases/tag/2.60.0
+
+2 changelog entries pushed to github
 ```
 
 ## Examples
