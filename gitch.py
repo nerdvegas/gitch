@@ -39,17 +39,19 @@ class ChangelogSyncer(object):
 
     https://developer.github.com/v3/repos/releases/
     """
-    def __init__(self, token, path=None, overwrite=False):
+    def __init__(self, token, path=None, overwrite=False, dry_run=False):
         """Create a syncer.
 
         Args:
             token (str): Github personal access token.
             path (str): Path on disk within target git repo.
             overwrite (bool): If True, overwrite existing gh releases.
+            dry_run (bool): Dry mode (no writes to github) if True.
         """
         self.path = path or os.getcwd()
         self.token = token
         self.overwrite = overwrite
+        self.dry_run = dry_run
 
         self.changelog_filepath = None
         self.github_user = None
@@ -155,6 +157,9 @@ class ChangelogSyncer(object):
             )
 
         # create the gh release
+        if self.dry_run:
+            return "https://github.com/jbloggs/i-dont-exist/releases/v1.0.0"
+
         data = {
             "tag_name": tag,
             "name": section["header"],
@@ -296,6 +301,15 @@ def init_logging():
         logger.setLevel(logging.INFO)
 
 
+def list_changelog_tags(syncer):
+    tags = syncer.get_changelog_tags()
+    if tags:
+        for tag in tags:
+            print(tag)
+    else:
+        error("No tags in changelog")
+
+
 def sync_to_github(opts, syncer):
     tags_to_sync = []
     changelog_tags = syncer.get_changelog_tags()
@@ -313,14 +327,19 @@ def sync_to_github(opts, syncer):
     if not tags_to_sync:
         error("No changelog entries")
 
+    num_synced = 0
+
     for tag in tags_to_sync:
         logger.info("Syncing %r to github...", tag)
 
         try:
             url = syncer.sync(tag)
             logger.info("%r synced, see %s", tag, url)
-        except ReleaseExistsError:
-            logger.warning("Skipped %r, github release already exists" % tag)
+            num_synced += 1
+        except GitchError as e:
+            logger.warning(str(e))
+
+    print("\n%d changelog entries pushed to github" % num_synced)
 
 
 def _main():
@@ -333,19 +352,12 @@ def _main():
 
     syncer = ChangelogSyncer(
         token=token,
-        overwrite=opts.overwrite
+        overwrite=opts.overwrite,
+        dry_run=opts.dry_run
     )
 
-    # list tags in changelog
     if opts.list:
-        tags = syncer.get_changelog_tags()
-        if tags:
-            for tag in tags:
-                print(tag)
-        else:
-            error("No tags in changelog")
-
-    # sync changelog to github
+        list_changelog_tags(syncer)
     else:
         sync_to_github(opts, syncer)
 
