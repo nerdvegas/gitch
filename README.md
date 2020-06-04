@@ -57,19 +57,19 @@ gitch INFO '2.60.0' synced, see https://github.com/jbloggs/foo/releases/tag/2.60
 
 ## Examples
 
-To list the tags present in your changelog:
+To list the entries (ie tags) present in your changelog:
 
 ```
 ]$ gitch -l
 ```
 
-To sync the latest changelog tag to github release notes:
+To sync the latest changelog entry to github releases:
 
 ```
 ]$ gitch
 ```
 
-To sync a specific changelog tag to github release notes:
+To sync a specific changelog entry to github releases:
 
 ```
 ]$ gitch <tag>
@@ -85,10 +85,4 @@ To sync an entire changelog to github (ie create all associated releases):
 
 ```
 ]$ gitch --all
-```
-
-To sync an entire changelog to github and overwrite all existing releases:
-
-```
-]$ gitch --all --overwrite
 ```
