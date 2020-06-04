@@ -173,7 +173,7 @@ class ChangelogSyncer(object):
 
     def _git(self, *nargs):
         return subprocess.check_output(
-            ["git"] + nargs,
+            ["git"] + list(nargs),
             stderr=subprocess.PIPE,
             cwd=self.path
         )
