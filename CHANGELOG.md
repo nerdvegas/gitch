@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+wheee
+
 ## 0.7.0
 
 getting there

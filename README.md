@@ -55,9 +55,9 @@ tags in your repository.
 gitch INFO Syncing 'v2.60.1' to github...
 gitch INFO 'v2.60.1' synced, see https://github.com/jbloggs/foo/releases/tag/v2.60.1
 gitch INFO Syncing 'v2.60.0' to github...
-gitch INFO 'v2.60.0' synced, see https://github.com/jbloggs/foo/releases/tag/v2.60.0
+gitch WARNING Tag 'v2.60.0' does not exist at the remote
 
-2 changelog entries pushed to github
+1 changelog entries pushed to github
 ```
 
 ## Examples
