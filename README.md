@@ -1,7 +1,8 @@
 # gitch
 
-Gitch syncs github release notes with your project's CHANGELOG.md. _How_ you
-create your changelog is of no interest to gitch.
+Gitch takes entries from your `CHANGELOG.md`, and converts them into
+[Github releases](https://help.github.com/en/github/administering-a-repository/managing-releases-in-a-repository).
+_How_ you create your changelog is of no interest to gitch.
 
 # Install
 
