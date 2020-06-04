@@ -27,13 +27,13 @@ Consider a `CHANGELOG.md` like so:
 ```
 # Changelog
 
-## 2.60.1 (2020-05-23)
+## v2.60.1 (2020-05-23)
 
 **Merged pull requests:**
 
 - did a thing to a thing.
 
-## 2.60.0 (2020-05-12)
+## v2.60.0 (2020-05-12)
 
 **Closed issues:**
 
@@ -41,16 +41,16 @@ Consider a `CHANGELOG.md` like so:
 ```
 
 The `gitch` tool will assume that the _first token in each H2 header_ identifies
-a tag in your github repository (in the example above, these are `2.60.1` and
-`2.60.0`). It will then simply create github releases that match these tags. The
+a tag in your github repository (in the example above, these are `v2.60.1` and
+`v2.60.0`). It will then simply create github releases that match these tags. The
 actual content within each tag section is copied verbatim into the release notes.
 
 ```
 ]$ gitch --all
-gitch INFO Syncing '2.60.1' to github...
-gitch INFO '2.60.1' synced, see https://github.com/jbloggs/foo/releases/tag/2.60.1
-gitch INFO Syncing '2.60.0' to github...
-gitch INFO '2.60.0' synced, see https://github.com/jbloggs/foo/releases/tag/2.60.0
+gitch INFO Syncing 'v2.60.1' to github...
+gitch INFO 'v2.60.1' synced, see https://github.com/jbloggs/foo/releases/tag/v2.60.1
+gitch INFO Syncing 'v2.60.0' to github...
+gitch INFO 'v2.60.0' synced, see https://github.com/jbloggs/foo/releases/tag/v2.60.0
 
 2 changelog entries pushed to github
 ```
