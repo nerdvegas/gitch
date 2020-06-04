@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.3.0 hello
+
 ## 0.2.0
 
 did stuff
